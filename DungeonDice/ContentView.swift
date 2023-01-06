@@ -32,18 +32,11 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geo in
             VStack {
-                Text("Dungeon Dice")
-                    .font(.largeTitle)
-                    .fontWeight(.black)
-                    .foregroundColor(.red)
+                titleView
                 
                 Spacer()
                 
-                Text(resultMessage)
-                    .font(.largeTitle)
-                    .fontWeight(.medium)
-                    .multilineTextAlignment(.center)
-                    .frame(height: 150)
+                resultMessageView
                 
                 Spacer()
                 
@@ -71,22 +64,39 @@ struct ContentView: View {
             }
             .padding()
             .onChange(of: geo.size.width, perform: { _ in
-                arrangeGridItems(geo: geo)
+                arrangeGridItems(deviceWidth: geo.size.width)
             })
             .onAppear {
-                arrangeGridItems(geo: geo)
+                arrangeGridItems(deviceWidth: geo.size.width)
             }
         }
     }
     
-    func arrangeGridItems(geo: GeometryProxy) {
-        var screenWidth = geo.size.width - horizontalPadding * 2 // padding on both sides
+    func arrangeGridItems(deviceWidth: CGFloat) {
+        var screenWidth = deviceWidth - horizontalPadding * 2 // padding on both sides
         if Dice.allCases.count > 1 {
             screenWidth += spacing
         }
         
         let numberOfButtonsPerRow = Int(screenWidth) / Int(buttonWidth + spacing)
         buttonLeftOver = Dice.allCases.count % numberOfButtonsPerRow
+    }
+}
+
+extension ContentView {
+    private var titleView: some View {
+        Text("Dungeon Dice")
+            .font(.largeTitle)
+            .fontWeight(.black)
+            .foregroundColor(.red)
+    }
+    
+    private var resultMessageView: some View {
+        Text(resultMessage)
+            .font(.largeTitle)
+            .fontWeight(.medium)
+            .multilineTextAlignment(.center)
+            .frame(height: 150)
     }
 }
 
